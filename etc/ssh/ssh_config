@@ -1,0 +1,4 @@
+Host *
+  IdentitiesOnly yes
+  IdentityFile /home/socksproxy/.ssh/id_ed25519
+  StrictHostKeyChecking yes
