@@ -2,7 +2,7 @@
 
 A Dockerized SOCKS proxy that connects to [socksd](https://github.com/zbo14/socksd) over SSH and tunnels your traffic.
 
-`socksproxy` also exposes an HTTP proxy that routes traffic through the SOCKS proxy. This is useful for applications and devices that only support web proxies (e.g. iOS).
+`socksproxy` also exposes an HTTP proxy that routes traffic through the SOCKS proxy. This is intended for clients that only support web proxies.
 
 ## Install
 
@@ -22,9 +22,11 @@ Build the Docker image for the proxy.
 
 `$ socksproxy init`
 
-Create a directory with the SSH keys and `known_hosts` file.
+Create directories with the SSH keys, SSH config, and `known_hosts` file.
 
-The directory will be mounted as a volume inside the container when the proxy starts.
+The SSH config is copied from the reference file `./ssh_config`. Once initialized, you can make config changes in `./etc/ssh/ssh_config` (e.g. change `DynamicForward`).
+
+The directories will be mounted as volumes inside the container when the proxy starts.
 
 This command only needs to run once.
 
@@ -32,7 +34,7 @@ This command only needs to run once.
 
 `$ socksproxy add-host HOST PORT PUBKEY`
 
-Add a host and its public key to the aforementioned `known_hosts` file.
+Add a host, port, and its public key to the aforementioned `known_hosts` file.
 
 ### Start
 
@@ -42,7 +44,7 @@ Start a Docker container running the SOCKS/HTTP proxies.
 
 The SOCKS proxy should connect to `HOST:PORT` if it's in `known_hosts` with the correct public key.
 
-The SOCKS/HTTP proxies should be listening on the ports specified in the `.env` file (`SOCKS_PORT` and `HTTP_PORT` respectively).
+The SOCKS proxy should listen on the `DynamicForward` port specified in the config and the HTTP proxy on the next port.
 
 ### Stop
 

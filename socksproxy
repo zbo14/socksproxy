@@ -3,14 +3,12 @@
 DIR=$(dirname "$(readlink $0)")
 cd $DIR
 
-. .env
-
 case $1 in
   add-host)
     if [[ $# != 4 ]]
     then
       echo "Usage: socksproxy <add-host> HOST PORT PUBKEY"
-      exit 0
+      exit
     fi
 
     echo "[$2]:$3 $4" >> home/socksproxy/.ssh/known_hosts
@@ -25,7 +23,8 @@ case $1 in
     ;;
 
   init)
-    mkdir -p home{,/socksproxy{,/.ssh}}
+    mkdir -p {etc{,/ssh},home{,/socksproxy{,/.ssh}}}
+    cp ssh_config etc/ssh
     touch home/socksproxy/.ssh/known_hosts
     ssh-keygen -t ed25519 -f home/socksproxy/.ssh/id_ed25519 -N ''
     ;;
@@ -34,8 +33,11 @@ case $1 in
     if [[ $# != 3 ]]
     then
       echo "Usage: socksproxy <start> HOST PORT"
-      exit 0
+      exit
     fi
+
+    SOCKS_PORT=$(grep 'DynamicForward' etc/ssh/ssh_config | cut -d ':' -f2)
+    let HTTP_PORT=$SOCKS_PORT+1
 
     docker run \
       -d \
@@ -46,6 +48,7 @@ case $1 in
       --name socksproxy \
       -p $SOCKS_PORT:$SOCKS_PORT \
       -p $HTTP_PORT:$HTTP_PORT \
+      -v $DIR/etc/ssh:/etc/ssh:ro \
       -v $DIR/home/socksproxy/.ssh:/home/socksproxy/.ssh:ro \
       socksproxy
     ;;
