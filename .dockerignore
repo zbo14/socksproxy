@@ -1,4 +1,8 @@
+cov
+coverage
 .DS_Store
 etc
 home
 node_modules
+.nyc_output
+out
