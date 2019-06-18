@@ -18,6 +18,10 @@ case $1 in
     docker build --no-cache -t socksproxy .
     ;;
 
+  get-hosts)
+    cat home/socksproxy/.ssh/known_hosts
+    ;;
+
   get-key)
     cat home/socksproxy/.ssh/id_ed25519.pub
     ;;
@@ -27,6 +31,16 @@ case $1 in
     cp ssh_config etc/ssh
     touch home/socksproxy/.ssh/known_hosts
     ssh-keygen -t ed25519 -f home/socksproxy/.ssh/id_ed25519 -N ''
+    ;;
+
+  rm-host)
+    if [[ $# != 3 ]]
+    then
+      echo "Usage: socksproxy <rm-host> HOST PORT"
+      exit
+    fi
+
+    grep -v "[$2]:$3" home/socksproxy/.ssh/known_hosts > home/socksproxy/.ssh/known_hosts
     ;;
 
   start)
@@ -64,8 +78,10 @@ case $1 in
 Commands:
   add-host  HOST PORT PUBKEY  Add a host and its public key to the known_hosts file
   build                       Build the Docker image
+  get-hosts                   Print the known_hosts file
   get-key                     Print the proxy\'s public key
   init                        Setup directory structure and SSH keys
+  rm-host   HOST PORT         Remove a host and its public key from the known_hosts file
   start     HOST PORT         Start a Docker container running the proxy (connects to HOST:PORT)
   stop                        Remove the Docker container and its volume'
     ;;
