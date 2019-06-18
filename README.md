@@ -10,6 +10,10 @@ Make sure you have [Docker](https://docs.docker.com/install/) installed.
 
 Then `git clone` the repository and `sh /path/to/socksproxy/install.sh`.
 
+For development and testing, install [Node](https://nodejs.org/en/) and [nvm](https://github.com/nvm-sh/nvm) if you haven't already.
+
+Then `cd` into the project directory, `nvm i`, and `npm i`.
+
 ## Usage
 
 ### Build
@@ -51,6 +55,14 @@ The SOCKS proxy should listen on the `DynamicForward` port specified in the conf
 `$ socksproxy stop`
 
 Remove the Docker container and the volume.
+
+## Test
+
+`npm test`
+
+## Documentation
+
+`npm run doc`
 
 ## Contributing
 
