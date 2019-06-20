@@ -1,5 +1,0 @@
-Host *
-  DynamicForward 0.0.0.0:17897
-  IdentitiesOnly yes
-  IdentityFile /home/socksproxy/.ssh/id_ed25519
-  StrictHostKeyChecking yes

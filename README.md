@@ -2,17 +2,9 @@
 
 A Dockerized SOCKS proxy that connects to [socksd](https://github.com/zbo14/socksd) over SSH and tunnels your traffic.
 
-`socksproxy` also exposes an HTTP proxy that routes traffic through the SOCKS proxy. This is intended for clients that only support web proxies.
-
 ## Install
 
-Make sure you have [Docker](https://docs.docker.com/install/) installed.
-
-Then `git clone` the repository and `sh /path/to/socksproxy/install.sh`.
-
-For development and testing, install [Node](https://nodejs.org/en/) and [nvm](https://github.com/nvm-sh/nvm) if you haven't already.
-
-Then `cd` into the project directory, `nvm i`, and `npm i`.
+`git clone` the repo and `sh /path/to/socksproxy/install.sh`.
 
 ## Usage
 
@@ -20,49 +12,53 @@ Then `cd` into the project directory, `nvm i`, and `npm i`.
 
 `$ socksproxy build`
 
-Build the Docker image for the proxy.
+Build the Docker image for the SOCKS proxy.
 
 ### Initialize
 
 `$ socksproxy init`
 
-Create directories with the SSH keys, SSH config, and `known_hosts` file.
+Create a directory with the SSH keys and `known_hosts` file.
 
-The SSH config is copied from the reference file `./ssh_config`. Once initialized, you can make config changes in `./etc/ssh/ssh_config` (e.g. change `DynamicForward`).
-
-The directories will be mounted as volumes inside the container when the proxy starts.
+The directory will be mounted as a volume inside the container it starts.
 
 This command only needs to run once.
 
-### Add host and public key
+### Add a host
 
-`$ socksproxy add-host HOST PORT PUBKEY`
+`$ HOST="" PORT="" PUBKEY="" socksproxy add-host`
 
 Add a host, port, and its public key to the aforementioned `known_hosts` file.
 
+### Get hosts
+
+`$ socksproxy get-hosts`
+
+Print the contents of the `known_hosts` file.
+
+### Remove a host
+
+`$ HOST="" PORT="" socksproxy rm-host`
+
+Remove the entry for host and port in the `known_hosts` file.
+
 ### Start
 
-`$ socksproxy start HOST PORT`
+`$ HOST="" LOCAL_PORT="" REMOTE_PORT="" socksproxy start`
 
-Start a Docker container running the SOCKS/HTTP proxies.
+Start a Docker container that connects to a host on the remote port.
 
-The SOCKS proxy should connect to `HOST:PORT` if it's in `known_hosts` with the correct public key.
+For this to succeed....
+1. The host and port must be in the `known_hosts` file, and
+2. The SOCKS proxy's public key must be in the `authorized_keys` file for user `socksproxy` on the host
 
-The SOCKS proxy should listen on the `DynamicForward` port specified in the config and the HTTP proxy on the next port.
+The SOCKS proxy will run in the container, mapped to the local port, and tunnel traffic over the SSH connection.
 
 ### Stop
 
 `$ socksproxy stop`
 
 Remove the Docker container and the volume.
-
-## Test
-
-`npm test`
-
-## Documentation
-
-`npm run doc`
 
 ## Contributing
 

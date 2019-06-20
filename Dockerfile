@@ -1,4 +1,4 @@
-FROM node:10.16.0-alpine
+FROM alpine:latest
 
 COPY . /
 
@@ -7,4 +7,8 @@ RUN apk add --no-cache --update --upgrade openssh && \
 
 USER socksproxy
 
-ENTRYPOINT sh entrypoint.sh $HOST $PORT $SOCKS_PORT $HTTP_PORT
+ENTRYPOINT \
+  HOST=$HOST \
+  LOCAL_PORT=$LOCAL_PORT \
+  REMOTE_PORT=$REMOTE_PORT \
+  sh entrypoint.sh

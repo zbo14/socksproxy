@@ -5,13 +5,13 @@ cd $DIR
 
 case $1 in
   add-host)
-    if [[ $# != 4 ]]
+    if [[ -z $HOST || -z $PORT || -z $PUBKEY ]]
     then
-      echo "Usage: socksproxy <add-host> HOST PORT PUBKEY"
+      echo "Usage: HOST=\"\" PORT=\"\" PUBKEY=\"\" socksproxy <add-host>"
       exit
     fi
 
-    echo "[$2]:$3 $4" >> home/socksproxy/.ssh/known_hosts
+    echo "[$HOST]:$PORT $PUBKEY" >> .ssh/known_hosts
     ;;
 
   build)
@@ -19,52 +19,46 @@ case $1 in
     ;;
 
   get-hosts)
-    cat home/socksproxy/.ssh/known_hosts
+    cat .ssh/known_hosts
     ;;
 
   get-key)
-    cat home/socksproxy/.ssh/id_ed25519.pub
+    cat .ssh/id_ed25519.pub
     ;;
 
   init)
-    mkdir -p {etc{,/ssh},home{,/socksproxy{,/.ssh}}}
-    cp ssh_config etc/ssh
-    touch home/socksproxy/.ssh/known_hosts
-    ssh-keygen -t ed25519 -f home/socksproxy/.ssh/id_ed25519 -N ''
+    mkdir -p .ssh
+    touch .ssh/known_hosts
+    ssh-keygen -t ed25519 -f .ssh/id_ed25519 -N ''
     ;;
 
   rm-host)
-    if [[ $# != 3 ]]
+    if [[ -z $HOST || -z $PORT ]]
     then
-      echo "Usage: socksproxy <rm-host> HOST PORT"
+      echo "Usage: HOST=\"\" PORT=\"\" socksproxy <rm-host>"
       exit
     fi
 
-    grep -v "[$2]:$3" home/socksproxy/.ssh/known_hosts > home/socksproxy/.ssh/known_hosts
+    grep -v "[$HOST]:$PORT" .ssh/known_hosts > .ssh/known_hosts
     ;;
 
   start)
-    if [[ $# != 3 ]]
+    if [[ -z $HOST || -z $LOCAL_PORT || -z $REMOTE_PORT ]]
     then
-      echo "Usage: socksproxy <start> HOST PORT"
+      echo "Usage: HOST=\"\" LOCAL_PORT=\"\" REMOTE_PORT=\"\" socksproxy <start>"
       exit
     fi
 
-    SOCKS_PORT=$(grep 'DynamicForward' etc/ssh/ssh_config | cut -d ':' -f2)
-    let HTTP_PORT=$SOCKS_PORT+1
-
     docker run \
       -d \
-      -e HOST=$2 \
-      -e PORT=$3 \
-      -e SOCKS_PORT=$SOCKS_PORT \
-      -e HTTP_PORT=$HTTP_PORT \
+      -e HOST=$HOST \
+      -e LOCAL_PORT=$LOCAL_PORT \
+      -e REMOTE_PORT=$REMOTE_PORT \
+      --init \
       --name socksproxy \
-      -p $SOCKS_PORT:$SOCKS_PORT \
-      -p $HTTP_PORT:$HTTP_PORT \
+      -p $LOCAL_PORT:$LOCAL_PORT \
       --restart=always \
-      -v $DIR/etc/ssh:/etc/ssh:ro \
-      -v $DIR/home/socksproxy/.ssh:/home/socksproxy/.ssh:ro \
+      -v $DIR/.ssh:/home/socksproxy/.ssh:ro \
       socksproxy
     ;;
 
@@ -73,16 +67,16 @@ case $1 in
     ;;
 
   *)
-    echo $'Usage: socksproxy <command> ARGS
+    echo $'Usage: [ARG1="" ARG2="" ...] socksproxy <command>
 
 Commands:
-  add-host  HOST PORT PUBKEY  Add a host and its public key to the known_hosts file
-  build                       Build the Docker image
-  get-hosts                   Print the known_hosts file
-  get-key                     Print the proxy\'s public key
-  init                        Setup directory structure and SSH keys
-  rm-host   HOST PORT         Remove a host and its public key from the known_hosts file
-  start     HOST PORT         Start a Docker container running the proxy (connects to HOST:PORT)
-  stop                        Remove the Docker container and its volume'
+  add-host    Add a host to the known_hosts file
+  build       Build the Docker image
+  get-hosts   Print the contents of the known_hosts file
+  get-key     Print the proxy\'s public key
+  init        Setup directory with SSH keys and known_hosts file
+  rm-host     Remove a host from the known_hosts file
+  start       Start a Docker container that connects to a host and runs the SOCKS proxy
+  stop        Remove the Docker container and its volume'
     ;;
 esac
