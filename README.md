@@ -4,7 +4,9 @@ A Dockerized SOCKS proxy that connects to [socksd](https://github.com/zbo14/sock
 
 ## Install
 
-`git clone` the repo and `sh /path/to/socksproxy/install.sh`.
+Make sure you have [Docker](https://docs.docker.com/install/) installed.
+
+Then `git clone` the repo and `sh /path/to/socksproxy/install.sh`.
 
 ## Usage
 
@@ -18,7 +20,7 @@ Build the Docker image for the SOCKS proxy.
 
 `$ socksproxy init`
 
-Create a directory with the SSH keys and `known_hosts` file.
+Create the `socksproxy` Docker network and a directory with the SSH keys and `known_hosts` file.
 
 The directory will be mounted as a volume inside the container once it starts.
 

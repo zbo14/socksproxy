@@ -30,6 +30,7 @@ case $1 in
     mkdir -p .ssh
     touch .ssh/known_hosts
     ssh-keygen -t ed25519 -f .ssh/id_ed25519 -N ''
+    docker network create socksproxy
     ;;
 
   rm-host)
@@ -56,6 +57,8 @@ case $1 in
       -e REMOTE_PORT=$REMOTE_PORT \
       --init \
       --name socksproxy \
+      --network="socksproxy" \
+      --network-alias="socksproxy" \
       -p $LOCAL_PORT:$LOCAL_PORT \
       --restart=always \
       -v $DIR/.ssh:/home/socksproxy/.ssh:ro \
@@ -74,7 +77,7 @@ Commands:
   build       Build the Docker image
   get-hosts   Print the contents of the known_hosts file
   get-key     Print the proxy\'s public key
-  init        Setup directory with SSH keys and known_hosts file
+  init        Create Docker network and directory with SSH keys and known_hosts file
   rm-host     Remove a host from the known_hosts file
   start       Start a Docker container that connects to a host and runs the SOCKS proxy
   stop        Remove the Docker container and its volume'
