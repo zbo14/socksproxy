@@ -20,13 +20,13 @@ Build the Docker image for the SOCKS proxy.
 
 Create a directory with the SSH keys and `known_hosts` file.
 
-The directory will be mounted as a volume inside the container it starts.
+The directory will be mounted as a volume inside the container once it starts.
 
 This command only needs to run once.
 
 ### Add a host
 
-`$ HOST="" PORT="" PUBKEY="" socksproxy add-host`
+`$ HOST= PORT= PUBKEY= socksproxy add-host`
 
 Add a host, port, and its public key to the aforementioned `known_hosts` file.
 
@@ -38,13 +38,13 @@ Print the contents of the `known_hosts` file.
 
 ### Remove a host
 
-`$ HOST="" PORT="" socksproxy rm-host`
+`$ HOST= PORT= socksproxy rm-host`
 
 Remove the entry for host and port in the `known_hosts` file.
 
 ### Start
 
-`$ HOST="" LOCAL_PORT="" REMOTE_PORT="" socksproxy start`
+`$ HOST= LOCAL_PORT= REMOTE_PORT= socksproxy start`
 
 Start a Docker container that connects to a host on the remote port.
 

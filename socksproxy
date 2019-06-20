@@ -7,7 +7,7 @@ case $1 in
   add-host)
     if [[ -z $HOST || -z $PORT || -z $PUBKEY ]]
     then
-      echo "Usage: HOST=\"\" PORT=\"\" PUBKEY=\"\" socksproxy <add-host>"
+      echo "Usage: HOST= PORT= PUBKEY= socksproxy <add-host>"
       exit
     fi
 
@@ -35,7 +35,7 @@ case $1 in
   rm-host)
     if [[ -z $HOST || -z $PORT ]]
     then
-      echo "Usage: HOST=\"\" PORT=\"\" socksproxy <rm-host>"
+      echo "Usage: HOST= PORT= socksproxy <rm-host>"
       exit
     fi
 
@@ -45,7 +45,7 @@ case $1 in
   start)
     if [[ -z $HOST || -z $LOCAL_PORT || -z $REMOTE_PORT ]]
     then
-      echo "Usage: HOST=\"\" LOCAL_PORT=\"\" REMOTE_PORT=\"\" socksproxy <start>"
+      echo "Usage: HOST= LOCAL_PORT= REMOTE_PORT= socksproxy <start>"
       exit
     fi
 
@@ -67,7 +67,7 @@ case $1 in
     ;;
 
   *)
-    echo $'Usage: [ARG1="" ARG2="" ...] socksproxy <command>
+    echo $'Usage: [ARG1= ARG2= ...] socksproxy <command>
 
 Commands:
   add-host    Add a host to the known_hosts file
