@@ -40,7 +40,8 @@ case $1 in
       exit
     fi
 
-    grep -v "[$HOST]:$PORT" .ssh/known_hosts > .ssh/known_hosts
+    grep -v "[$HOST]:$PORT" .ssh/known_hosts > other_hosts
+    mv other_hosts .ssh/known_hosts
     ;;
 
   start)
