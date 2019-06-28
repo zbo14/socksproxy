@@ -20,7 +20,7 @@ Build the Docker image for the SOCKS proxy.
 
 `$ socksproxy init`
 
-Create the `socksproxy` Docker network and a directory with the SSH keys and `known_hosts` file.
+Create the directory with the SSH keys and `known_hosts` file.
 
 The directory will be mounted as a volume inside the container once it starts.
 
@@ -42,7 +42,15 @@ Print the contents of the `known_hosts` file.
 
 `$ HOST= PORT= socksproxy rm-host`
 
-Remove the entry for host and port in the `known_hosts` file.
+Remove the entry for host and port from the `known_hosts` file.
+
+### Create network
+
+`$ socksproxy create-network`
+
+Create the Docker network for the SOCKS proxy.
+
+[http2socks](https://github.com/zbo14/http2socks) will also join this network when it starts.
 
 ### Start
 
@@ -50,7 +58,7 @@ Remove the entry for host and port in the `known_hosts` file.
 
 Start a Docker container that connects to a host on the remote port.
 
-For this to succeed....
+For this to succeed...
 1. The host and port must be in the `known_hosts` file, and
 2. The SOCKS proxy's public key must be in the `authorized_keys` file for user `socksproxy` on the host
 
@@ -61,6 +69,12 @@ The SOCKS proxy will run in the container, mapped to the local port, and tunnel 
 `$ socksproxy stop`
 
 Remove the Docker container and the volume.
+
+### Remove network
+
+`$ socksproxy rm-network`
+
+Remove the Docker network.
 
 ## Contributing
 
