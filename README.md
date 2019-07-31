@@ -6,7 +6,7 @@ A Dockerized SOCKS proxy that connects to [socksd](https://github.com/zbo14/sock
 
 Make sure you have [Docker](https://docs.docker.com/install/) installed.
 
-Then `git clone` the repo and `sh /path/to/socksproxy/install.sh`.
+Then clone the repo and `sh install.sh`.
 
 ## Usage
 

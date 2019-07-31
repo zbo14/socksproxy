@@ -3,6 +3,8 @@
 DIR=$(dirname "$(readlink $0)")
 cd $DIR
 
+set +e
+
 case $1 in
   add-host)
     if [[ -z $HOST || -z $PORT || -z $PUBKEY ]]
@@ -43,7 +45,7 @@ case $1 in
       exit
     fi
 
-    grep -v "[$HOST]:$PORT" .ssh/known_hosts > other_hosts
+    grep -v "\[$HOST\]:$PORT" .ssh/known_hosts > other_hosts
     mv other_hosts .ssh/known_hosts
     ;;
 
