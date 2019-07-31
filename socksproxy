@@ -13,6 +13,8 @@ case $1 in
       exit
     fi
 
+    grep -v "\[$HOST\]:$PORT" .ssh/known_hosts > other_hosts
+    mv other_hosts .ssh/known_hosts
     echo "[$HOST]:$PORT $PUBKEY" >> .ssh/known_hosts
     ;;
 
@@ -80,7 +82,7 @@ case $1 in
     ;;
 
   *)
-    echo $'Usage: ARG1= ARG2= ... socksproxy <command>
+    echo $'Usage: [PARAMS=] socksproxy <command>
 
 Commands:
   add-host        Add a host to the known_hosts file
