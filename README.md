@@ -1,80 +1,41 @@
 # socksproxy
 
-A Dockerized SOCKS proxy that connects to [socksd](https://github.com/zbo14/socksd) over SSH and tunnels your traffic.
+A SOCKS proxy that connects to [socksd](https://github.com/zbo14/socksd) over SSH and tunnels your traffic.
 
 ## Install
 
-Make sure you have [Docker](https://docs.docker.com/install/) installed.
-
-Then clone the repo and `sh install.sh`.
+Clone the repo and `sudo sh install.sh`.
 
 ## Usage
 
-### Build
-
-`$ socksproxy build`
-
-Build the Docker image for the SOCKS proxy.
-
-### Initialize
-
-`$ socksproxy init`
-
-Create the directory with the SSH keys and `known_hosts` file.
-
-The directory will be mounted as a volume inside the container once it starts.
-
-This command only needs to run once.
-
-### Add a host
-
-`$ HOST= PORT= PUBKEY= socksproxy add-host`
-
-Add a host, port, and its public key to the aforementioned `known_hosts` file.
-
-### Get hosts
-
-`$ socksproxy get-hosts`
-
-Print the contents of the `known_hosts` file.
-
-### Remove a host
-
-`$ HOST= PORT= socksproxy rm-host`
-
-Remove the entry for host and port from the `known_hosts` file.
-
-### Create network
-
-`$ socksproxy create-network`
-
-Create the Docker network for the SOCKS proxy.
-
-[http2socks](https://github.com/zbo14/http2socks) will also join this network when it starts.
+`socksproxy` runs as a systemd service so you can use `systemctl` commands.
 
 ### Start
 
-`$ HOST= LOCAL_PORT= REMOTE_PORT= socksproxy start`
-
-Start a Docker container that connects to a host on the remote port.
-
-For this to succeed...
-1. The host and port must be in the `known_hosts` file, and
-2. The SOCKS proxy's public key must be in the `authorized_keys` file for user `socksproxy` on the host
-
-The SOCKS proxy will run in the container, mapped to the local port, and tunnel traffic over the SSH connection.
+`sudo systemctl start socksproxy`
 
 ### Stop
 
-`$ socksproxy stop`
+`sudo systemctl stop socksproxy`
 
-Remove the Docker container and the volume.
+### View logs
 
-### Remove network
+`sudo journalctl -u socksproxy`
 
-`$ socksproxy rm-network`
+### Config
 
-Remove the Docker network.
+The config file `/etc/socksproxy/socksproxy.conf` contains the following:
+
+```sh
+## The address of the socksd instance
+HOST=127.0.0.1
+
+## The port socksproxy listens on
+LOCAL_PORT=17897
+
+## The port socksd is listening on
+REMOTE_PORT=17896
+``````
 
 ## Contributing
 
