@@ -1,0 +1,10 @@
+[Unit]
+Description=socksproxy systemd service.
+
+[Service]
+Type=simple
+ExecStart=/bin/bash /usr/bin/socksproxy.sh
+EnvironmentFile=/etc/socksproxy/socksproxy.conf
+
+[Install]
+WantedBy=multi-user.target
