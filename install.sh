@@ -1,6 +1,5 @@
 #!/bin/bash -e
 
-apt update
 apt install -y autossh
 
 chmod u+x socksproxy.sh

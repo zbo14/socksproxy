@@ -35,7 +35,7 @@ LOCAL_PORT=17897
 
 ## The port socksd is listening on
 REMOTE_PORT=17896
-``````
+```
 
 ## Contributing
 
